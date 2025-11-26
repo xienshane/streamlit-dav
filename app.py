@@ -2,263 +2,83 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from sklearn.linear_model import LinearRegression
 
-# ----------------------------------------
-# PAGE CONFIG
-# ----------------------------------------
+# Page configuration
 st.set_page_config(
-    page_title="Sleep Health Dashboard",
-    page_icon="😴",
-    layout="wide"
+    page_title="Group Project Progress",
+    page_icon="🛌",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# ----------------------------------------
-# CUSTOM CSS
-# ----------------------------------------
+# ---------------- Header ----------------
+st.markdown("<h1 style='text-align:center; color:#6a1b9a;'>Group Project: Sleep Health Analysis</h1>", unsafe_allow_html=True)
+st.markdown("---")
+
+# ---------------- Project Overview ----------------
+st.subheader("Project Overview")
+st.write("""
+We are working on analyzing the **Sleep Health and Lifestyle Dataset** available on Kaggle:  
+[Sleep Health and Lifestyle Dataset](https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-dataset)
+""")
+
+st.write("""
+Our project goal is to apply several **computational and statistical methods** to gain insights into sleep health patterns:
+""")
 st.markdown("""
-<style>
-    body { background-color: #faf6ff; }
-    .section-title {
-        font-size: 2rem;
-        color: #7d3c98;
-        font-weight: bold;
-        margin-top: 30px;
-        border-left: 6px solid #a569bd;
-        padding-left: 12px;
-    }
-    .card {
-        background-color: #f3e9ff;
-        padding: 20px;
-        border-radius: 12px;
-        border-left: 6px solid #9b59b6;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        margin-bottom: 20px;
-    }
-    .profile-card {
-        background-color: white;
-        border-radius: 15px;
-        padding: 15px;
-        border: 2px solid #d9c4ff;
-        text-align: center;
-        box-shadow: 0 2px 10px rgba(90,0,120,0.1);
-    }
-</style>
-""", unsafe_allow_html=True)
+- **K-means Clustering:** Partition data points into distinct clusters.  
+- **EM Clustering:** Model-based clustering for varying cluster sizes/densities.  
+- **DBScan Clustering:** Discover clusters of arbitrary shape and detect outliers.  
+- **SLINK Clustering:** Hierarchical clustering to build a dendrogram.  
+- **Linear Regression:** Quantify linear relationships between variables.  
+""")
 
+# ---------------- Group Progress ----------------
+st.subheader("Group Progress")
+st.write("""
+Currently, we are focusing on **data cleaning and preparation**.  
+We have practiced and implemented basic data manipulation and visualizations using **pandas** and **matplotlib**.
+""")
 
-# ----------------------------------------
-# SIDEBAR NAVIGATION
-# ----------------------------------------
-st.sidebar.title("📌 Navigation")
-page = st.sidebar.radio("Go to:", [
-    "📊 Project Overview",
-    "🧑‍🤝‍🧑 Group Members",
-    "📁 Dataset",
-    "⚙️ Clustering Models",
-    "📉 Linear Regression"
-])
+# ---------------- Static Example Data ----------------
+st.subheader("Sample Data Preview")
+data = {
+    "ID": [1, 2, 3, 4, 5],
+    "Age": [25, 30, 22, 28, 35],
+    "Sleep Duration (hrs)": [7, 6, 8, 5, 7],
+    "Exercise (hrs/week)": [3, 1, 2, 4, 1],
+    "Stress Level": [2, 4, 3, 5, 3]
+}
+df = pd.DataFrame(data)
+st.dataframe(df, use_container_width=True)
 
+# ---------------- Placeholder Visualizations ----------------
+st.subheader("Example Visualizations")
 
-# ==========================================================
-# PAGE 1 — PROJECT OVERVIEW
-# ==========================================================
-if page == "📊 Project Overview":
-    st.markdown("<h1 style='text-align:center;color:#8e44ad;'>😴 Sleep Health & Lifestyle — Group Dashboard</h1>", unsafe_allow_html=True)
+# Histogram of Sleep Duration
+fig1 = px.histogram(df, x="Sleep Duration (hrs)", nbins=5, title="Distribution of Sleep Duration")
+st.plotly_chart(fig1, use_container_width=True)
 
-    st.markdown("<div class='section-title'>📁 Dataset Selected</div>", unsafe_allow_html=True)
-    st.markdown("""
-        <div class='card'>
-        <h3>🛌 Sleep Health and Lifestyle Dataset</h3>
-        <p>From Kaggle — contains sleep duration, stress, physical activity, and other lifestyle factors.</p>
-        <a href='https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-dataset' target='_blank'>
-            🔗 Open Dataset on Kaggle</a>
-        </div>
-    """, unsafe_allow_html=True)
+# Scatter plot: Sleep vs Exercise
+fig2 = px.scatter(df, x="Exercise (hrs/week)", y="Sleep Duration (hrs)", size="Stress Level",
+                  color="Stress Level", title="Sleep Duration vs Exercise", size_max=20)
+st.plotly_chart(fig2, use_container_width=True)
 
-    st.markdown("<div class='section-title'>🔧 Methods We Will Use</div>", unsafe_allow_html=True)
-    col1, col2 = st.columns(2)
+# ---------------- Placeholder for Clustering ----------------
+st.subheader("Clustering Placeholder")
+st.write("Here we will display results from K-means, EM, DBScan, and SLINK clustering once implemented.")
 
-    with col1:
-        st.markdown("""
-        <div class='card'>
-            <h4>📌 K-means Clustering</h4>
-            <p>Groups sleep patterns using centroid-based clustering.</p>
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("K-means Clusters", "3")
+col2.metric("EM Clusters", "4")
+col3.metric("DBScan Clusters", "3")
+col4.metric("SLINK Clusters", "Hierarchical Tree")
 
-            <h4>📌 EM Clustering</h4>
-            <p>Gaussian Mixture Model — soft assignments for flexible clusters.</p>
+# ---------------- Placeholder for Regression ----------------
+st.subheader("Linear Regression Placeholder")
+st.write("We will analyze linear relationships between variables. Example placeholder:")
+st.latex(r"Sleep\ Duration = \beta_0 + \beta_1 \cdot Exercise + \beta_2 \cdot Stress + \epsilon")
 
-            <h4>📌 DBSCAN</h4>
-            <p>Discovers noise and arbitrarily shaped clusters.</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col2:
-        st.markdown("""
-        <div class='card'>
-            <h4>📌 SLINK (Hierarchical)</h4>
-            <p>Builds dendrogram relationship structure.</p>
-
-            <h4>📌 Linear Regression</h4>
-            <p>Models linear relationships between lifestyle variables.</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # timeline progress
-    st.markdown("<div class='section-title'>📈 Project Timeline Progress</div>", unsafe_allow_html=True)
-
-    progress_data = {
-        "Dataset Selection": 100,
-        "Data Cleaning": 40,
-        "Exploratory Analysis": 25,
-        "Clustering Models": 10,
-        "Regression Modeling": 5,
-        "Streamlit UI": 35
-    }
-
-    for task, pct in progress_data.items():
-        st.write(f"**{task}**")
-        st.progress(pct / 100)
-
-    # Placeholder chart
-    st.markdown("<div class='section-title'>📊 Sample Placeholder Chart</div>", unsafe_allow_html=True)
-    fake_data = np.random.randint(5, 10, 7)
-    fig = px.line(x=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-                  y=fake_data, markers=True,
-                  title="Sample Sleep Hours Visualization")
-    st.plotly_chart(fig, use_container_width=True)
-
-
-# ==========================================================
-# PAGE 2 — GROUP MEMBERS
-# ==========================================================
-elif page == "🧑‍🤝‍🧑 Group Members":
-    st.markdown("<h1 style='text-align:center;color:#8e44ad;'>🧑‍🤝‍🧑 Meet the Team</h1>", unsafe_allow_html=True)
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.markdown("""
-        <div class='profile-card'>
-            <h3>Lovely Shane Ong</h3>
-            <p>📘 Data Cleaning • Clustering Implementation</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col2:
-        st.markdown("""
-        <div class='profile-card'>
-            <h3>Group Member 2</h3>
-            <p>📘 Model Research • Dataset Analysis</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col3:
-        st.markdown("""
-        <div class='profile-card'>
-            <h3>Group Member 3</h3>
-            <p>📘 Streamlit UI • Visualization</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-
-# ==========================================================
-# PAGE 3 — DATASET
-# ==========================================================
-elif page == "📁 Dataset":
-    st.markdown("<h1 style='color:#8e44ad;'>📁 Upload & Preview Dataset</h1>", unsafe_allow_html=True)
-
-    uploaded = st.file_uploader("Upload Sleep Dataset (CSV)", type=["csv"])
-
-    if uploaded:
-        df = pd.read_csv(uploaded)
-        st.success("Dataset uploaded!")
-
-        st.write("### 🔍 Data Preview")
-        st.dataframe(df.head(500))  # show only first 500 rows
-
-        st.write("### 📊 Basic Statistics")
-        st.write(df.describe())
-
-        st.write("### 🔢 Column List")
-        st.write(df.columns.tolist())
-
-        st.session_state["df"] = df
-    else:
-        st.info("Upload the dataset to proceed.")
-
-
-# ==========================================================
-# PAGE 4 — CLUSTERING MODELS
-# ==========================================================
-elif page == "⚙️ Clustering Models":
-    st.markdown("<h1 style='color:#8e44ad;'>⚙️ Clustering Analysis</h1>", unsafe_allow_html=True)
-
-    if "df" not in st.session_state:
-        st.error("⚠️ Please upload the dataset first in the 'Dataset' page.")
-    else:
-        df = st.session_state["df"]
-        numeric_cols = df.select_dtypes(include=["float64", "int64"]).columns.tolist()
-        st.write("### Select Features for Clustering")
-        selected = st.multiselect("Choose numeric columns:", numeric_cols)
-        algorithm = st.selectbox("Choose clustering method:", [
-            "K-means",
-            "EM (Gaussian Mixture)",
-            "DBSCAN",
-            "Hierarchical (SLINK)"
-        ])
-
-        if st.button("Run Clustering"):
-            from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
-            from sklearn.mixture import GaussianMixture
-
-            data = df[selected].dropna()
-
-            if algorithm == "K-means":
-                model = KMeans(n_clusters=3)
-                df["Cluster"] = model.fit_predict(data)
-            elif algorithm == "EM (Gaussian Mixture)":
-                model = GaussianMixture(n_components=3)
-                df["Cluster"] = model.fit_predict(data)
-            elif algorithm == "DBSCAN":
-                model = DBSCAN(eps=1.5, min_samples=5)
-                df["Cluster"] = model.fit_predict(data)
-            else:  # hierarchical
-                model = AgglomerativeClustering(n_clusters=3)
-                df["Cluster"] = model.fit_predict(data)
-
-            st.success("Clustering complete!")
-            fig = px.scatter(df, x=selected[0], y=selected[1], color=df["Cluster"], title="Cluster Result")
-            st.plotly_chart(fig)
-
-
-# ==========================================================
-# PAGE 5 — LINEAR REGRESSION
-# ==========================================================
-elif page == "📉 Linear Regression":
-    st.markdown("<h1 style='color:#8e44ad;'>📉 Linear Regression Model</h1>", unsafe_allow_html=True)
-
-    if "df" not in st.session_state:
-        st.error("⚠️ Please upload a dataset first.")
-    else:
-        df = st.session_state["df"]
-        numeric_cols = df.select_dtypes(include=["float64", "int64"]).columns.tolist()
-
-        target = st.selectbox("Target Variable:", numeric_cols)
-        feature = st.selectbox("Feature Variable:", numeric_cols)
-
-        if st.button("Run Regression"):
-            X = df[[feature]]
-            y = df[target]
-
-            model = LinearRegression()
-            model.fit(X, y)
-
-            df["Predicted"] = model.predict(X)
-
-            fig = px.scatter(df, x=feature, y=target, title="Linear Regression")
-            fig.add_traces(px.line(df, x=feature, y="Predicted").data)
-
-            st.plotly_chart(fig)
-            st.write(f"### Coefficient: {model.coef_[0]:.3f}")
-            st.write(f"### Intercept: {model.intercept_:.3f}")
+# ---------------- Footer ----------------
+st.markdown("---")
+st.markdown("<p style='text-align:center; color:gray;'>Made with 💜 using Streamlit • Group Project 2025</p>", unsafe_allow_html=True)
