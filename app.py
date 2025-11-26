@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
-from sklearn.mixture import GaussianMixture
+import plotly.express as px
 from sklearn.linear_model import LinearRegression
 
 # ----------------------------------------
@@ -19,9 +18,7 @@ st.set_page_config(
 # ----------------------------------------
 st.markdown("""
 <style>
-    body {
-        background-color: #faf6ff;
-    }
+    body { background-color: #faf6ff; }
     .section-title {
         font-size: 2rem;
         color: #7d3c98;
@@ -178,7 +175,7 @@ elif page == "📁 Dataset":
         st.success("Dataset uploaded!")
 
         st.write("### 🔍 Data Preview")
-        st.dataframe(df.head())
+        st.dataframe(df.head(500))  # show only first 500 rows
 
         st.write("### 📊 Basic Statistics")
         st.write(df.describe())
@@ -201,12 +198,9 @@ elif page == "⚙️ Clustering Models":
         st.error("⚠️ Please upload the dataset first in the 'Dataset' page.")
     else:
         df = st.session_state["df"]
-
         numeric_cols = df.select_dtypes(include=["float64", "int64"]).columns.tolist()
-
         st.write("### Select Features for Clustering")
         selected = st.multiselect("Choose numeric columns:", numeric_cols)
-
         algorithm = st.selectbox("Choose clustering method:", [
             "K-means",
             "EM (Gaussian Mixture)",
@@ -215,6 +209,9 @@ elif page == "⚙️ Clustering Models":
         ])
 
         if st.button("Run Clustering"):
+            from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+            from sklearn.mixture import GaussianMixture
+
             data = df[selected].dropna()
 
             if algorithm == "K-means":
